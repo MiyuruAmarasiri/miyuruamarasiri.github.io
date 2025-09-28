@@ -32,6 +32,16 @@ The optimized output appears in the `dist/` directory. To clean build artifacts 
 npm run clean
 ```
 
+## Deployment
+
+Continuous deployment to GitHub Pages is automated with the workflow in `.github/workflows/deploy.yml`.
+
+1. Ensure GitHub Pages is configured to "GitHub Actions" under **Settings → Pages**. The first successful deployment will create the `github-pages` environment and surface the published URL.
+2. Every push to `main` (or a manual run via the **Actions** tab) installs dependencies, runs `npm run build`, and publishes the `dist/` bundle—CNAME included—to the `gh-pages` branch managed by the Pages service.
+3. Custom domain updates: keep the desired domain in the `CNAME` file at the project root. The build pipeline copies it into the published artifact automatically.
+
+If you need to perform a one-off manual deployment, build locally with `npm run build`, then upload the contents of `dist/` via the GitHub Pages "Deployments" view or an alternative hosting provider.
+
 ## Serving over HTTP/2
 
 Lighthouse recommends delivering the built assets over HTTP/2. You can achieve that with either a managed host or your own server stack:
