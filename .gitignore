@@ -9,11 +9,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .idea/
-img/
-js/
 .babelrc.json
 .gitattributes
-robots.txt
-icon.png
-icon.svg
-generate-icon.ps1
