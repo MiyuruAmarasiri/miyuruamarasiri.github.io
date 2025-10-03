@@ -1,6 +1,18 @@
 // Main Application Entry Point
 import '../css/style.css';
 
+(function enforceHttps() {
+    if (typeof window === 'undefined') {
+        return;
+    }
+
+    const { protocol, hostname } = window.location;
+    if (protocol === 'http:' && hostname && !['localhost', '127.0.0.1', '0.0.0.0'].includes(hostname)) {
+        const secureUrl = `https://${hostname}${window.location.pathname}${window.location.search}${window.location.hash}`;
+        window.location.replace(secureUrl);
+    }
+})();
+
 const state = {
     motionEnabled: !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
 };
@@ -36,6 +48,7 @@ function init() {
         registerCleanup(setupScrollEffects());
         registerCleanup(setupCounterAnimations());
         registerCleanup(setupNavHighlighting());
+        registerCleanup(setupSmoothAnchorScroll());
         registerCleanup(setupMotionToggle());
     });
 
@@ -224,6 +237,79 @@ function setupNavHighlighting() {
         if (header && headerScrollHandler) {
             window.removeEventListener('scroll', headerScrollHandler, { passive: true });
         }
+    };
+}
+
+function setupSmoothAnchorScroll() {
+    const header = document.querySelector('[data-floating-header]');
+    const triggers = Array.from(document.querySelectorAll('a[href^="#"]')).filter((link) => {
+        const href = link.getAttribute('href');
+        if (!href || href === '#') return false;
+        const id = href.slice(1);
+        return Boolean(document.getElementById(id));
+    });
+
+    if (!triggers.length) return;
+
+    const getHeaderOffset = () => {
+        if (!header) return 0;
+        const rect = header.getBoundingClientRect();
+        const extra = window.innerWidth < 1024 ? 16 : 24;
+        return Math.max(rect.height + extra, 0);
+    };
+
+    const scrollToTarget = (target, hash, updateHistory) => {
+        const headerOffset = getHeaderOffset();
+        const targetTop = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+        window.scrollTo({
+            top: Math.max(targetTop, 0),
+            behavior: state.motionEnabled ? 'smooth' : 'auto',
+        });
+
+        if (updateHistory) {
+            if (typeof window.history.pushState === 'function') {
+                window.history.pushState(null, '', `#${hash}`);
+            } else {
+                window.location.hash = hash;
+            }
+        }
+    };
+
+    const handleClick = (event) => {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+            return;
+        }
+
+        const href = event.currentTarget.getAttribute('href');
+        if (!href || href === '#') return;
+
+        const targetId = href.slice(1);
+        const target = document.getElementById(targetId);
+        if (!target) return;
+
+        event.preventDefault();
+        scrollToTarget(target, targetId, true);
+    };
+
+    const handleHashChange = () => {
+        const { hash } = window.location;
+        if (!hash || hash.length <= 1) return;
+        const targetId = decodeURIComponent(hash.slice(1));
+        const target = document.getElementById(targetId);
+        if (!target) return;
+        scrollToTarget(target, targetId, false);
+    };
+
+    triggers.forEach((link) => link.addEventListener('click', handleClick));
+    window.addEventListener('hashchange', handleHashChange);
+
+    if (window.location.hash && window.location.hash.length > 1) {
+        runIdle(() => handleHashChange());
+    }
+
+    return () => {
+        triggers.forEach((link) => link.removeEventListener('click', handleClick));
+        window.removeEventListener('hashchange', handleHashChange);
     };
 }
 

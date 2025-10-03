@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Profile silhouette icon">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="50%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+  </defs>
+  <circle cx="64" cy="64" r="60" fill="#f9fbff" />
+  <path fill="url(#gradient)" d="M64 18a26 26 0 1 1-26 26A26 26 0 0 1 64 18Zm0 54c22.36 0 40.82 16.47 42.77 37.46a4 4 0 0 1-3.98 4.54H24.21a4 4 0 0 1-3.98-4.54C22.18 88.47 41.64 72 64 72Z"/>
+</svg>
