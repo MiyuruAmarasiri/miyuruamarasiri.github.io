@@ -355,59 +355,55 @@
 
     <section class="section contact-section relative overflow-hidden py-32" id="contact" data-scroll-section>
       <div class="contact-bg pointer-events-none absolute inset-0">
-        <div class="absolute inset-0 bg-gradient-to-br from-[#eef5ff] via-white to-[#fef4ff]"></div>
-        <div class="absolute -left-10 top-14 h-72 w-72 rounded-full bg-aurora/18 blur-3xl"></div>
-        <div class="absolute right-[-6%] bottom-[-8%] h-80 w-80 rounded-full bg-bloom/18 blur-3xl"></div>
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_35%_25%,rgba(99,102,241,0.18),transparent_55%),radial-gradient(circle_at_75%_80%,rgba(244,114,182,0.14),transparent_60%)] opacity-70"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-[#f0f4ff] via-white to-[#fff5fe]"></div>
+        <div class="absolute -left-16 top-20 h-80 w-80 rounded-full bg-blue-500/10 blur-3xl"></div>
+        <div class="absolute right-[-8%] bottom-[-12%] h-96 w-96 rounded-full bg-purple-500/10 blur-3xl"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.15),transparent_50%),radial-gradient(circle_at_80%_75%,rgba(168,85,247,0.15),transparent_55%)] opacity-80"></div>
       </div>
       <div class="relative mx-auto w-full max-w-6xl px-6 lg:px-8">
-        <div class="contact-grid grid gap-12 rounded-[2.5rem] border border-ink/10 bg-white/85 p-12 shadow-veil backdrop-blur-2xl md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]" data-scroll-reveal>
-          <div class="contact-lead space-y-6">
-            <span class="section__eyebrow inline-flex items-center gap-2 rounded-full bg-aurora/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.32em] text-aurora">Let’s craft the exceptional</span>
-            <h2 class="font-display text-3xl leading-tight text-ink sm:text-4xl">Invite me to elevate your next chapter.</h2>
-            <p class="text-base text-ink/70">Together we’ll tune the numbers, choreograph the flows, and deliver interfaces that feel inevitable. Tell me about the problem, and I’ll co-design the path to a calmer close.</p>
-            <div class="contact-actions flex flex-wrap items-center gap-3">
-              <a class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-aurora via-glow to-bloom px-6 py-3 text-xs font-semibold uppercase tracking-[0.32em] text-white shadow-float transition duration-300 hover:-translate-y-1" href="mailto:hello@miyuru.dev">Book a strategy session</a>
-              <a class="inline-flex items-center gap-2 rounded-full border border-aurora/25 bg-white px-6 py-3 text-xs font-semibold uppercase tracking-[0.32em] text-aurora transition duration-300 hover:border-aurora/45 hover:text-aurora" href="#" aria-label="Download Miyuru Amarasiri resume">Download résumé</a>
-            </div>
-            <dl class="contact-stats grid gap-6 text-sm text-ink/65 sm:grid-cols-3">
-              <div class="space-y-2">
-                <dt class="text-[0.65rem] uppercase tracking-[0.32em] text-ink/45">Average response</dt>
-                <dd class="font-display text-3xl font-semibold text-ink"><span class="text-aurora">24</span>h</dd>
-              </div>
-              <div class="space-y-2">
-                <dt class="text-[0.65rem] uppercase tracking-[0.32em] text-ink/45">Timezone</dt>
-                <dd class="font-display text-3xl font-semibold text-ink">GMT+5:30</dd>
-              </div>
-              <div class="space-y-2">
-                <dt class="text-[0.65rem] uppercase tracking-[0.32em] text-ink/45">Collaboration</dt>
-                <dd class="font-display text-3xl font-semibold text-ink">Remote-first</dd>
-              </div>
-            </dl>
+        <div class="contact-pro-shell" data-scroll-reveal>
+          <div class="contact-pro-header">
+            <span class="contact-pro-eyebrow">Interface &rarr; Inquiry</span>
+            <h2 class="contact-pro-title">Let's Architect Your Next Digital Advantage</h2>
+            <p class="contact-pro-lead">
+              I operate at the intersection of robust engineering and exceptional user experience. If you have a complex challenge that demands a secure, scalable, and elegant solution, I'm ready to listen.
+            </p>
           </div>
-          <div class="contact-panel space-y-6 rounded-[2rem] border border-aurora/20 bg-white/95 p-8 shadow-subtle">
-            <div class="space-y-2">
-              <p class="text-xs font-semibold uppercase tracking-[0.32em] text-aurora">Current focus</p>
-              <p class="text-lg font-semibold text-ink">Partnering with finance teams on intelligent automation.</p>
+          <div class="contact-pro-body">
+            <div class="contact-pro-form-wrapper">
+              <form class="contact-pro-form" action="mailto:miyubhashi2002@gmail.com" method="post" enctype="text/plain">
+                <div class="form-group">
+                  <label for="name">Full Name</label>
+                  <input type="text" id="name" name="name" placeholder="Your Name" required>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email Address</label>
+                  <input type="email" id="email" name="email" placeholder="Your Email" required>
+                </div>
+                <div class="form-group">
+                  <label for="message">Your Message</label>
+                  <textarea id="message" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
+                </div>
+                <button type="submit" class="contact-pro-submit">Contact Me &rarr;</button>
+              </form>
             </div>
-            <ul class="space-y-3 text-sm text-ink/70">
-              <li class="flex items-start gap-3">
-                <span class="mt-1 h-2.5 w-2.5 rounded-full bg-aurora/80"></span>
-                <span>Available for fractional product leadership and transformation sprints.</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="mt-1 h-2.5 w-2.5 rounded-full bg-bloom/80"></span>
-                <span>Ideal for CFOs, controllers, and founders translating complex ledgers into clarity.</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span class="mt-1 h-2.5 w-2.5 rounded-full bg-aurora/60"></span>
-                <span>Let's explore AI co-pilots for finance operations and narrative dashboards.</span>
-              </li>
-            </ul>
-            <div class="rounded-2xl bg-aurora/5 p-5 text-sm text-ink/70">
-              <p class="text-xs font-semibold uppercase tracking-[0.32em] text-aurora/80">Direct line</p>
-              <a class="mt-2 block text-lg font-semibold text-aurora transition duration-200 hover:text-bloom" href="mailto:hello@miyuru.dev">miyubhashi2002@gmail.com</a>
-              <p class="mt-2 text-xs text-ink/50">Weekdays · 08:00 – 18:00 GMT+5:30</p>
+            <div class="contact-pro-info">
+              <h3 class="contact-pro-info-title">Direct Channels</h3>
+              <p class="contact-pro-info-text">For more direct inquiries or to share sensitive documents, please use the channels below.</p>
+              <ul class="contact-pro-info-list">
+                <li>
+                  <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 4.5h21V19.5h-21V4.5Zm2.25 1.5v10.5h16.5V6Zm1.59 1.5.01-.01 6.15 4.1 6.15-4.1-.01.01V7.6L12 11.79l-6.66-4.19v.09Z"/></svg>
+                  <a href="mailto:miyubhashi2002@gmail.com">miyubhashi2002@gmail.com</a>
+                </li>
+                <li>
+                  <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2.25 2.25a.75.75 0 0 0-.75.75v18a.75.75 0 0 0 .75.75h18a.75.75 0 0 0 .75-.75V3a.75.75 0 0 0-.75-.75H2.25ZM19.5 19.5H4.5V4.5h15v15ZM9 12.75a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5H9Z"/></svg>
+                  <span>Horana, Sri Lanka (Remote)</span>
+                </li>
+                <!-- <li>
+                  <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2.25 2.25a.75.75 0 0 0-.75.75v18a.75.75 0 0 0 .75.75h18a.75.75 0 0 0 .75-.75V3a.75.75 0 0 0-.75-.75H2.25ZM19.5 19.5H4.5V4.5h15v15ZM9 12.75a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5H9Z"/></svg>
+                  <a href="https://www.linkedin.com/in/miyuruamarasiri" target="_blank" rel="noopener">LinkedIn Profile</a>
+                </li> -->
+              </ul>
             </div>
           </div>
         </div>
