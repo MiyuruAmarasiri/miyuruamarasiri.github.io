@@ -102,9 +102,17 @@ function setupScrollEffects() {
     const sections = document.querySelectorAll('[data-scroll-section]');
     const reveals = document.querySelectorAll('[data-scroll-reveal]');
 
-    if (!state.motionEnabled) {
-        sections.forEach((el) => el.classList.add('is-visible'));
-        reveals.forEach((el) => el.classList.add('is-visible'));
+    if (!sections.length && !reveals.length) {
+        return;
+    }
+
+    const revealImmediately = (elements) => {
+        elements.forEach((el) => el.classList.add('is-visible'));
+    };
+
+    if (!state.motionEnabled || typeof IntersectionObserver !== 'function') {
+        revealImmediately(sections);
+        revealImmediately(reveals);
         return;
     }
 
@@ -116,7 +124,10 @@ function setupScrollEffects() {
                 }
             });
         },
-        { threshold: 0.2 }
+        {
+            threshold: 0.12,
+            rootMargin: '-18% 0px -10% 0px',
+        }
     );
 
     const revealObserver = new IntersectionObserver(
@@ -128,11 +139,30 @@ function setupScrollEffects() {
                 }
             });
         },
-        { threshold: 0.3 }
+        {
+            threshold: 0.18,
+            rootMargin: '-12% 0px -8% 0px',
+        }
     );
+
+    const preloadVisible = () => {
+        sections.forEach((el) => {
+            if (el.getBoundingClientRect().top <= window.innerHeight * 0.9) {
+                el.classList.add('is-visible');
+            }
+        });
+        reveals.forEach((el) => {
+            if (el.getBoundingClientRect().top <= window.innerHeight * 0.9) {
+                el.classList.add('is-visible');
+            }
+        });
+    };
 
     sections.forEach((el) => sectionObserver.observe(el));
     reveals.forEach((el) => revealObserver.observe(el));
+
+    preloadVisible();
+    window.addEventListener('load', preloadVisible, { once: true });
 
     return () => {
         sectionObserver.disconnect();
