@@ -1,6 +1,7 @@
 /* eslint-disable */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './js/app.js',
@@ -54,6 +55,22 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './index.html',
       favicon: './icon.png',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: '_headers', to: '_headers', toType: 'file' },
+        { from: 'netlify.toml', to: 'netlify.toml', toType: 'file' },
+        { from: 'vercel.json', to: 'vercel.json', toType: 'file' },
+        { from: 'robots.txt', to: 'robots.txt', toType: 'file' },
+        { from: 'site.webmanifest', to: 'site.webmanifest', toType: 'file' },
+        { from: 'CNAME', to: 'CNAME', toType: 'file' },
+        { from: '404.html', to: '404.html', toType: 'file' },
+        { from: 'icon.svg', to: 'icon.svg', toType: 'file' },
+        { from: 'icon.png', to: 'icon.png', toType: 'file' },
+        { from: 'css', to: 'css' },
+        { from: 'img', to: 'img' },
+        { from: 'js/vendor', to: 'js/vendor' },
+      ],
     }),
   ],
   resolve: {

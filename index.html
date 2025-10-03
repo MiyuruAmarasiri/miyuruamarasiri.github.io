@@ -12,11 +12,20 @@
   <meta property="og:url" content="https://miyuruamarasiri.me">
   <meta property="og:image" content="/icon.png">
   <meta property="og:image:alt" content="Miyuru Amarasiri Monogram">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests">
+  <!-- Enhanced Security Headers - Enterprise Grade Configuration -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:; object-src 'none'; media-src 'self'; frame-src 'none'; child-src 'none'; worker-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; manifest-src 'self'; upgrade-insecure-requests; block-all-mixed-content">
   <meta http-equiv="X-Frame-Options" content="DENY">
+
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta name="referrer" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Permissions-Policy" content="accelerometer=(), autoplay=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), cross-origin-isolated=(), display-capture=(), document-domain=(), encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), fullscreen=(), geolocation=(), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=()">
+  <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
+  <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+  <meta http-equiv="Cross-Origin-Resource-Policy" content="same-origin">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <meta http-equiv="X-Permitted-Cross-Domain-Policies" content="none">
+  <meta http-equiv="X-Download-Options" content="noopen">
+  <meta http-equiv="Strict-Transport-Security" content="max-age=63072000; includeSubDomains; preload">
 
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
   <link rel="icon" href="/icon.png" type="image/png">
@@ -416,7 +425,7 @@
                 <a class="contact-pro-button" href="mailto:miyubhashi2002@gmail.com?subject=Interview%20Opportunity%20for%20Miyuru%20Amarasiri">Request an interview</a>
                 <a class="contact-pro-button contact-pro-button--secondary" href="https://www.linkedin.com/in/miyuruamarasiri" target="_blank" rel="noopener">View LinkedIn profile</a>
               </div>
-              <p class="contact-pro-note">Résumé, case studies, and references are available on request. I respond within 24 hours.</p>
+              <p class="contact-pro-note">Resume, case studies, and references are available on request. I respond within 24 hours.</p>
             </div>
             <div class="contact-pro-info">
               <h3 class="contact-pro-info-title">Candidate snapshot</h3>
@@ -506,6 +515,7 @@
     <span class="hand-icon" aria-hidden="true">👋</span>
     <span class="sr-only">Back to top</span>
   </button>
+  
 </body>
 
 </html>

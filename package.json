@@ -14,9 +14,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack serve --config webpack.config.dev.js",
-    "build": "webpack --config webpack.config.prod.js",
+  "build": "npm run clean && webpack --config webpack.config.prod.js",
     "build:dev": "webpack --config webpack.config.dev.js",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "security:test": "node security-headers-test.js",
+    "security:test:local": "node security-headers-test.js http://localhost:3000",
+    "security:test:prod": "node security-headers-test.js https://miyuruamarasiri.me"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",
