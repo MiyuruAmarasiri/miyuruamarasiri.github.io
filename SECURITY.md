@@ -13,31 +13,35 @@ The website implements enterprise-grade security headers to protect against vari
 
 **Configuration**:
 ```
-default-src 'self'; 
-script-src 'self' 'unsafe-inline'; 
-style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
-font-src 'self' https://fonts.gstatic.com; 
-img-src 'self' data: https:; 
-connect-src 'self' https:; 
-object-src 'none'; 
-media-src 'self'; 
-frame-src 'none'; 
-child-src 'none'; 
-worker-src 'self'; 
-frame-ancestors 'none'; 
-form-action 'self'; 
-base-uri 'self'; 
-manifest-src 'self'; 
-upgrade-insecure-requests; 
-block-all-mixed-content
+default-src 'self';
+script-src 'self';
+script-src-attr 'none';
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+style-src-attr 'none';
+font-src 'self' https://fonts.gstatic.com;
+img-src 'self' data: https:;
+connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;
+media-src 'self';
+object-src 'none';
+child-src 'none';
+frame-src 'none';
+worker-src 'self' blob:;
+frame-ancestors 'none';
+form-action 'self';
+base-uri 'self';
+manifest-src 'self';
+upgrade-insecure-requests;
+block-all-mixed-content;
+require-trusted-types-for 'script'
 ```
 
 **Key Features**:
-- Blocks all external scripts except from same origin
-- Allows Google Fonts for typography
+- Blocks all external scripts except from same origin and bans inline event handlers
+- Allows Google Fonts for typography while forbidding other third-party styles
+- Locks down dynamically injected styles to the bundled runtime only
 - Prevents framing (clickjacking protection)
-- Forces HTTPS upgrades
-- Blocks mixed content
+- Forces HTTPS upgrades and Mixed Content blocking
+- Requires Trusted Types for script sinks, mitigating DOM XSS injection
 
 #### 2. X-Frame-Options
 **Purpose**: Prevents clickjacking attacks by controlling iframe embedding.
@@ -63,12 +67,13 @@ block-all-mixed-content
 **Purpose**: Controls browser feature access to prevent unauthorized usage.
 
 **Configuration**: Disables all sensitive features:
-- `accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), cross-origin-isolated=(), display-capture=(), document-domain=(), encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), fullscreen=(), geolocation=(), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=()`
+- `accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), clipboard-read=(), clipboard-write=(), cross-origin-isolated=(), display-capture=(), document-domain=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), hid=(), interest-cohort=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), serial=(), speaker-selection=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=()`
 
 #### 6. Cross-Origin Policies
 **Cross-Origin-Embedder-Policy**: `require-corp`
 **Cross-Origin-Opener-Policy**: `same-origin`
 **Cross-Origin-Resource-Policy**: `same-origin`
+**Origin-Agent-Cluster**: `?1`
 
 These headers provide additional isolation and prevent cross-origin attacks.
 
@@ -77,6 +82,7 @@ These headers provide additional isolation and prevent cross-origin attacks.
 - **X-Permitted-Cross-Domain-Policies**: `none` (Blocks Flash/PDF policies)
 - **X-Download-Options**: `noopen` (Prevents IE from opening downloads)
 - **Strict-Transport-Security**: `max-age=63072000; includeSubDomains; preload` (2-year HSTS)
+- **X-DNS-Prefetch-Control**: `off` (Prevents DNS prefetching data exposure)
 
 ## 🚀 Deployment Configurations
 

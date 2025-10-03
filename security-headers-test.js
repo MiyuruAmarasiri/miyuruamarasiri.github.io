@@ -3,6 +3,7 @@
  * Tests and validates security headers implementation
  * Run with: node security-headers-test.js [URL]
  */
+/* eslint-disable */
 
 const https = require('https');
 const http = require('http');
@@ -17,12 +18,20 @@ const REQUIRED_HEADERS = {
       const requiredDirectives = [
         'default-src',
         'script-src',
+        'script-src-attr',
         'style-src',
+        'style-src-attr',
         'img-src',
         'connect-src',
         'font-src',
         'object-src',
-        'frame-ancestors'
+        'frame-ancestors',
+        'form-action',
+        'base-uri',
+        'worker-src',
+        'manifest-src',
+        'upgrade-insecure-requests',
+        'block-all-mixed-content'
       ];
       return requiredDirectives.every(directive => 
         value.toLowerCase().includes(directive)

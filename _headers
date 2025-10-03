@@ -3,7 +3,7 @@
   # Comprehensive protection against XSS, clickjacking, MIME sniffing, and other web vulnerabilities
   
   # Content Security Policy - Strict policy to prevent XSS and data injection attacks
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:; object-src 'none'; media-src 'self'; frame-src 'none'; child-src 'none'; worker-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; manifest-src 'self'; upgrade-insecure-requests; block-all-mixed-content
+  Content-Security-Policy: default-src 'self'; script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src-attr 'none'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; media-src 'self'; object-src 'none'; child-src 'none'; frame-src 'none'; worker-src 'self' blob:; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; manifest-src 'self'; upgrade-insecure-requests; block-all-mixed-content; require-trusted-types-for 'script'
   
   # Clickjacking Protection - Prevent embedding in frames
   X-Frame-Options: DENY
@@ -15,12 +15,13 @@
   Referrer-Policy: strict-origin-when-cross-origin
   
   # Permissions Policy - Restrict access to browser features
-  Permissions-Policy: accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), cross-origin-isolated=(), display-capture=(), document-domain=(), encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), fullscreen=(), geolocation=(), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=()
+  Permissions-Policy: accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), clipboard-read=(), clipboard-write=(), cross-origin-isolated=(), display-capture=(), document-domain=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), hid=(), interest-cohort=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), serial=(), speaker-selection=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=()
   
   # Cross-Origin Policies
   Cross-Origin-Embedder-Policy: require-corp
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
+  Origin-Agent-Cluster: ?1
   
   # Additional Security Headers
   X-XSS-Protection: 1; mode=block
@@ -31,26 +32,27 @@
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   
   # Cache Control for Security
-  Cache-Control: no-cache, no-store, must-revalidate, private
+  Cache-Control: no-store, no-cache, must-revalidate, private
   Pragma: no-cache
   Expires: 0
+  X-DNS-Prefetch-Control: off
 
 # Static Assets - More permissive caching but maintain security
 /css/*
   Cache-Control: public, max-age=31536000, immutable
-  Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com
+  Content-Security-Policy: default-src 'none'; style-src 'self'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:
 
 /js/*
   Cache-Control: public, max-age=31536000, immutable
-  Content-Security-Policy: default-src 'self'; script-src 'self'
+  Content-Security-Policy: default-src 'none'; script-src 'self'; worker-src 'self'; manifest-src 'self'
 
 /img/*
   Cache-Control: public, max-age=31536000, immutable
-  Content-Security-Policy: default-src 'self'; img-src 'self' data:
+  Content-Security-Policy: default-src 'none'; img-src 'self' data:
 
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
-  Content-Security-Policy: default-src 'self'; font-src 'self' https://fonts.gstatic.com
+  Content-Security-Policy: default-src 'none'; font-src 'self' https://fonts.gstatic.com
 
 # Manifest and Service Worker
 /site.webmanifest
