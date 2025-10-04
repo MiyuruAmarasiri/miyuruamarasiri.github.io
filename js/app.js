@@ -1,6 +1,147 @@
 // Main Application Entry Point
 import '../css/style.css';
 
+const MOTION_MEDIA_QUERY = '(prefers-reduced-motion: reduce)';
+const MOTION_EVENT = 'motion-preference-change';
+
+function computeMotionPreference() {
+    if (typeof window === 'undefined') {
+        return true;
+    }
+
+    const media = typeof window.matchMedia === 'function'
+        ? window.matchMedia(MOTION_MEDIA_QUERY)
+        : { matches: false };
+    const nav = typeof navigator !== 'undefined' ? navigator : undefined;
+    const saveData = Boolean(nav && nav.connection && nav.connection.saveData);
+    const lowConcurrency = Boolean(nav && typeof nav.hardwareConcurrency === 'number' && nav.hardwareConcurrency > 0 && nav.hardwareConcurrency <= 4);
+    const lowMemory = Boolean(nav && typeof nav.deviceMemory === 'number' && nav.deviceMemory > 0 && nav.deviceMemory <= 4);
+
+    return !(media.matches || saveData || lowConcurrency || lowMemory);
+}
+
+function applyMotionState(enabled) {
+    if (typeof document === 'undefined') return;
+    document.documentElement.classList.toggle('motion-disabled', !enabled);
+}
+
+function broadcastMotionState(enabled) {
+    if (typeof document === 'undefined') return;
+    document.dispatchEvent(new CustomEvent(MOTION_EVENT, { detail: enabled }));
+}
+
+function registerSecurityObservers() {
+    if (typeof document === 'undefined') return () => {};
+
+    const handleViolation = (event) => {
+        const payload = {
+            blockedURI: event.blockedURI || 'inline',
+            violatedDirective: event.violatedDirective,
+            lineNumber: event.lineNumber,
+            columnNumber: event.columnNumber,
+            sourceFile: event.sourceFile,
+            timestamp: Date.now(),
+        };
+
+        try {
+            const previous = JSON.parse(sessionStorage.getItem('csp-violations') ?? '[]');
+            previous.push(payload);
+            sessionStorage.setItem('csp-violations', JSON.stringify(previous.slice(-10)));
+        } catch (storageError) {
+            console.warn('Security policy violation detected', payload, storageError);
+        }
+    };
+
+    document.addEventListener('securitypolicyviolation', handleViolation);
+
+    return () => document.removeEventListener('securitypolicyviolation', handleViolation);
+}
+
+function createTrustedTypesPolicy() {
+    if (typeof window === 'undefined' || !window.trustedTypes) {
+        return;
+    }
+
+    try {
+        window.trustedTypes.createPolicy('default', {
+            createHTML: (input) => input,
+            createScript: () => {
+                throw new TypeError('Dynamic script creation blocked by Trusted Types policy.');
+            },
+            createScriptURL: () => {
+                throw new TypeError('Dynamic script URL creation blocked by Trusted Types policy.');
+            },
+        });
+    } catch (error) {
+        if (!(error instanceof DOMException)) {
+            console.warn('Unable to establish Trusted Types policy', error);
+        }
+    }
+}
+
+function syncMotionState(nextState) {
+    const resolvedState = typeof nextState === 'boolean' ? nextState : computeMotionPreference();
+    if (resolvedState === state.motionEnabled) {
+        return state.motionEnabled;
+    }
+
+    state.motionEnabled = resolvedState;
+    applyMotionState(state.motionEnabled);
+    broadcastMotionState(state.motionEnabled);
+
+    return state.motionEnabled;
+}
+
+function registerMotionPreferenceWatchers() {
+    if (typeof window === 'undefined') return () => {};
+
+    const media = typeof window.matchMedia === 'function'
+        ? window.matchMedia(MOTION_MEDIA_QUERY)
+        : null;
+    const connection = typeof navigator !== 'undefined' ? navigator.connection : undefined;
+    const previousConnectionOnChange = connection && connection.onchange;
+
+    const handleChange = () => {
+        syncMotionState();
+    };
+
+    if (media) {
+        if (typeof media.addEventListener === 'function') {
+            media.addEventListener('change', handleChange);
+        } else if (typeof media.addListener === 'function') {
+            media.addListener(handleChange);
+        }
+    }
+
+    if (connection) {
+        if (typeof connection.addEventListener === 'function') {
+            connection.addEventListener('change', handleChange);
+        } else {
+            connection.onchange = handleChange;
+        }
+    }
+
+    return () => {
+        if (media) {
+            if (typeof media.removeEventListener === 'function') {
+                media.removeEventListener('change', handleChange);
+            } else if (typeof media.removeListener === 'function') {
+                media.removeListener(handleChange);
+            }
+        }
+
+        if (connection) {
+            if (typeof connection.removeEventListener === 'function') {
+                connection.removeEventListener('change', handleChange);
+            } else {
+                connection.onchange = typeof previousConnectionOnChange === 'undefined' ? null : previousConnectionOnChange;
+            }
+        }
+    };
+}
+
+createTrustedTypesPolicy();
+
 (function enforceHttps() {
     if (typeof window === 'undefined') {
         return;
@@ -14,8 +155,10 @@ import '../css/style.css';
 })();
 
 const state = {
-    motionEnabled: !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    motionEnabled: computeMotionPreference(),
 };
+
+applyMotionState(state.motionEnabled);
 
 const cleanupTasks = [];
 
@@ -41,6 +184,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function init() {
     updateYear();
+    registerCleanup(registerSecurityObservers());
+    registerCleanup(registerMotionPreferenceWatchers());
     registerCleanup(setupMobileNav());
     registerCleanup(setupBackToTop());
 
@@ -103,7 +248,7 @@ function setupScrollEffects() {
     const reveals = document.querySelectorAll('[data-scroll-reveal]');
 
     if (!sections.length && !reveals.length) {
-        return;
+        return () => {};
     }
 
     const revealImmediately = (elements) => {
@@ -113,7 +258,7 @@ function setupScrollEffects() {
     if (!state.motionEnabled || typeof IntersectionObserver !== 'function') {
         revealImmediately(sections);
         revealImmediately(reveals);
-        return;
+        return () => {};
     }
 
     const sectionObserver = new IntersectionObserver(
@@ -164,7 +309,24 @@ function setupScrollEffects() {
     preloadVisible();
     window.addEventListener('load', preloadVisible, { once: true });
 
+    const handleMotionEvent = (event) => {
+        if (typeof event.detail !== 'boolean') return;
+        if (!event.detail) {
+            revealImmediately(sections);
+            revealImmediately(reveals);
+            sectionObserver.disconnect();
+            revealObserver.disconnect();
+        } else {
+            sections.forEach((el) => sectionObserver.observe(el));
+            reveals.forEach((el) => revealObserver.observe(el));
+            preloadVisible();
+        }
+    };
+
+    document.addEventListener(MOTION_EVENT, handleMotionEvent);
+
     return () => {
+        document.removeEventListener(MOTION_EVENT, handleMotionEvent);
         sectionObserver.disconnect();
         revealObserver.disconnect();
     };
@@ -197,7 +359,7 @@ function setupCounterAnimations() {
         counters.forEach((el) => {
             el.textContent = el.dataset.countTo ?? '0';
         });
-        return;
+        return () => {};
     }
 
     const counterObserver = new IntersectionObserver(
@@ -408,12 +570,12 @@ function setupMotionToggle() {
     const toggleButton = document.querySelector('[data-toggle-motion]');
     if (!toggleButton) return;
 
-    const handleClick = () => {
-        state.motionEnabled = !state.motionEnabled;
+    const updateUi = () => {
         toggleButton.classList.toggle('is-disabled', !state.motionEnabled);
-        toggleButton.querySelector('.theme-toggle__label').textContent = state.motionEnabled
-            ? 'Motion'
-            : 'Static';
+        const label = toggleButton.querySelector('.theme-toggle__label');
+        if (label) {
+            label.textContent = state.motionEnabled ? 'Motion' : 'Static';
+        }
 
         if (!state.motionEnabled) {
             document.querySelectorAll('[data-scroll-section], [data-scroll-reveal]').forEach((el) => {
@@ -422,15 +584,36 @@ function setupMotionToggle() {
             document.querySelectorAll('[data-count-to]').forEach((el) => {
                 el.textContent = el.dataset.countTo ?? '0';
             });
-        } else {
-            setupScrollEffects();
-            setupCounterAnimations();
         }
     };
 
-    toggleButton.addEventListener('click', handleClick);
+    updateUi();
 
-    return () => toggleButton.removeEventListener('click', handleClick);
+    const handleClick = () => {
+        const enabled = !state.motionEnabled;
+        syncMotionState(enabled);
+
+        if (enabled) {
+            setupScrollEffects();
+            setupCounterAnimations();
+        }
+
+        updateUi();
+    };
+
+    const handleExternalChange = (event) => {
+        if (typeof event.detail !== 'boolean') return;
+        state.motionEnabled = event.detail;
+        updateUi();
+    };
+
+    toggleButton.addEventListener('click', handleClick);
+    document.addEventListener(MOTION_EVENT, handleExternalChange);
+
+    return () => {
+        toggleButton.removeEventListener('click', handleClick);
+        document.removeEventListener(MOTION_EVENT, handleExternalChange);
+    };
 }
 
 export { init };

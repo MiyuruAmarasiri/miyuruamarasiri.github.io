@@ -15,6 +15,30 @@ html {
   scroll-behavior: smooth;
 }
 
+html.motion-disabled {
+  scroll-behavior: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .orbit {
+    animation: none !important;
+    box-shadow: none !important;
+  }
+
+  .background-orbits {
+    display: none;
+  }
+}
+
 body {
   min-height: 100vh;
   position: relative;
@@ -350,6 +374,13 @@ body.nav-open {
 .is-visible[data-scroll-reveal] {
   opacity: 1;
   transform: translateY(0);
+}
+
+html.motion-disabled [data-scroll-section],
+html.motion-disabled [data-scroll-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
 }
 
 .main-content {
