@@ -1,4 +1,6 @@
 /* eslint-disable */
+process.env.NODE_ENV = 'development';
+
 const path = require('path');
 const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
