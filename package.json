@@ -51,5 +51,9 @@
   "browserslist": [
     "defaults",
     "not IE 11"
-  ]
+  ],
+  "dependencies": {
+    "@fontsource/dm-serif-display": "^5.2.8",
+    "@fontsource/space-grotesk": "^5.2.10"
+  }
 }

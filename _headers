@@ -3,7 +3,7 @@
   # Comprehensive protection against XSS, clickjacking, MIME sniffing, and other web vulnerabilities
   
   # Content Security Policy - Strict policy to prevent XSS and data injection attacks
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-portfolio2025'; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src-attr 'none'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; media-src 'self'; object-src 'none'; child-src 'none'; frame-src 'none'; worker-src 'self' blob:; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; manifest-src 'self'; upgrade-insecure-requests; block-all-mixed-content; require-trusted-types-for 'script'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-portfolio2025'; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; style-src-attr 'none'; font-src 'self'; img-src 'self' data: https:; connect-src 'self'; media-src 'self'; object-src 'none'; child-src 'none'; frame-src 'none'; worker-src 'self' blob:; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; manifest-src 'self'; upgrade-insecure-requests; block-all-mixed-content; require-trusted-types-for 'script'
   
   # Clickjacking Protection - Prevent embedding in frames
   X-Frame-Options: DENY
@@ -40,7 +40,7 @@
 # Static Assets - More permissive caching but maintain security
 /css/*
   Cache-Control: public, max-age=31536000, immutable
-  Content-Security-Policy: default-src 'none'; style-src 'self'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:
+  Content-Security-Policy: default-src 'none'; style-src 'self'; font-src 'self'; img-src 'self' data:
 
 /js/*
   Cache-Control: public, max-age=31536000, immutable
@@ -52,7 +52,7 @@
 
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
-  Content-Security-Policy: default-src 'none'; font-src 'self' https://fonts.gstatic.com
+  Content-Security-Policy: default-src 'none'; font-src 'self'
 
 # Manifest and Service Worker
 /site.webmanifest

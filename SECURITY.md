@@ -16,11 +16,11 @@ The website implements enterprise-grade security headers to protect against vari
 default-src 'self';
 script-src 'self';
 script-src-attr 'none';
-style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+style-src 'self' 'unsafe-inline';
 style-src-attr 'none';
-font-src 'self' https://fonts.gstatic.com;
+font-src 'self';
 img-src 'self' data: https:;
-connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;
+connect-src 'self';
 media-src 'self';
 object-src 'none';
 child-src 'none';
@@ -37,7 +37,7 @@ require-trusted-types-for 'script'
 
 **Key Features**:
 - Blocks all external scripts except from same origin and bans inline event handlers
-- Allows Google Fonts for typography while forbidding other third-party styles
+- Hosts typography assets locally, eliminating third-party style dependencies
 - Locks down dynamically injected styles to the bundled runtime only
 - Prevents framing (clickjacking protection)
 - Forces HTTPS upgrades and Mixed Content blocking

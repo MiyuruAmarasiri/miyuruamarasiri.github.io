@@ -1,4 +1,11 @@
 // Main Application Entry Point
+import '@fontsource/space-grotesk/300.css';
+import '@fontsource/space-grotesk/400.css';
+import '@fontsource/space-grotesk/500.css';
+import '@fontsource/space-grotesk/600.css';
+import '@fontsource/space-grotesk/700.css';
+import '@fontsource/dm-serif-display/400.css';
+import '@fontsource/dm-serif-display/400-italic.css';
 import '../css/style.css';
 
 const MOTION_MEDIA_QUERY = '(prefers-reduced-motion: reduce)';
