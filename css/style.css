@@ -853,6 +853,49 @@ section[id] {
   border: 0;
 }
 
+/* Clickjacking guard overlay */
+html.is-frame-blocked {
+  overflow: hidden;
+}
+
+.frame-block-notice {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: rgba(13, 16, 24, 0.94);
+  color: #f8fafc;
+  font-family: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  text-align: center;
+}
+
+.frame-block-notice__panel {
+  max-width: 28rem;
+  width: min(100%, 28rem);
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background: rgba(15, 23, 42, 0.72);
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  backdrop-filter: blur(12px);
+}
+
+.frame-block-notice__title {
+  margin: 0 0 0.75rem;
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: 0.0125em;
+}
+
+.frame-block-notice__message {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(226, 232, 240, 0.88);
+}
+
 @keyframes hand-wave {
   0%,
   100% {

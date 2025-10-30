@@ -161,6 +161,96 @@ createTrustedTypesPolicy();
     }
 })();
 
+function enforceFrameIntegrity() {
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+        return () => {};
+    }
+
+    const root = document.documentElement;
+    let overlay = null;
+    let breakoutAttempted = false;
+
+    const teardownOverlay = () => {
+        if (overlay && overlay.parentNode) {
+            overlay.parentNode.removeChild(overlay);
+        }
+        overlay = null;
+        root.classList.remove('is-frame-blocked');
+        breakoutAttempted = false;
+    };
+
+    const ensureOverlay = () => {
+        if (overlay) {
+            return;
+        }
+
+        overlay = document.createElement('div');
+        overlay.id = 'frame-block-notice';
+        overlay.className = 'frame-block-notice';
+        overlay.setAttribute('role', 'alert');
+
+        const panel = document.createElement('div');
+        panel.className = 'frame-block-notice__panel';
+
+        const title = document.createElement('h1');
+        title.className = 'frame-block-notice__title';
+        title.textContent = 'Embedding Disabled';
+
+        const message = document.createElement('p');
+        message.className = 'frame-block-notice__message';
+        message.textContent = 'This portfolio cannot be embedded in other sites. Please open it directly to continue.';
+
+        panel.appendChild(title);
+        panel.appendChild(message);
+        overlay.appendChild(panel);
+        document.body.appendChild(overlay);
+    };
+
+    const guard = () => {
+        const isFramed = (() => {
+            try {
+                return window.top !== window.self;
+            } catch (error) {
+                return true;
+            }
+        })();
+
+        if (!isFramed) {
+            teardownOverlay();
+            return;
+        }
+
+        root.classList.add('is-frame-blocked');
+        ensureOverlay();
+
+        if (!breakoutAttempted) {
+            breakoutAttempted = true;
+            try {
+                if (window.top && typeof window.top.location !== 'undefined') {
+                    window.top.location = window.location.href;
+                }
+            } catch (error) {
+                console.warn('Clickjacking attempt detected; staying in stand-alone mode.', error);
+            }
+        }
+    };
+
+    const handleVisibilityChange = () => guard();
+    const handleFocusChange = () => guard();
+
+    guard();
+    window.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('blur', handleFocusChange);
+    window.addEventListener('focus', handleFocusChange);
+
+    return () => {
+        window.removeEventListener('visibilitychange', handleVisibilityChange);
+        window.removeEventListener('blur', handleFocusChange);
+        window.removeEventListener('focus', handleFocusChange);
+        teardownOverlay();
+    };
+}
+
 const state = {
     motionEnabled: computeMotionPreference(),
 };
@@ -192,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function init() {
     updateYear();
     registerCleanup(registerSecurityObservers());
+    registerCleanup(enforceFrameIntegrity());
     registerCleanup(registerMotionPreferenceWatchers());
     registerCleanup(setupMobileNav());
     registerCleanup(setupBackToTop());

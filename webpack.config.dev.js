@@ -20,7 +20,7 @@ module.exports = merge(common, {
     historyApiFallback: true,
     headers: {
       // Security Headers - Enterprise Grade Configuration for Development
-      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; style-src-attr 'none'; font-src 'self'; img-src 'self' data: https: blob:; connect-src 'self' ws: wss:; media-src 'self'; object-src 'none'; child-src 'none'; frame-src 'none'; worker-src 'self' blob:; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; manifest-src 'self'; upgrade-insecure-requests; block-all-mixed-content",
+      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'nonce-portfolio2025' 'unsafe-inline' 'unsafe-eval'; script-src-attr 'none'; style-src 'self' 'nonce-portfolio2025' 'unsafe-inline'; style-src-attr 'none'; font-src 'self'; img-src 'self' data: https: blob:; connect-src 'self' ws: wss:; media-src 'self'; object-src 'none'; child-src 'none'; frame-src 'none'; worker-src 'self' blob:; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; manifest-src 'self'; upgrade-insecure-requests; block-all-mixed-content; trusted-types default; require-trusted-types-for 'script'",
       'X-Frame-Options': 'DENY',
       'X-Content-Type-Options': 'nosniff',
       'Referrer-Policy': 'strict-origin-when-cross-origin',

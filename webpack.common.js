@@ -94,7 +94,16 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+          isProduction
+            ? MiniCssExtractPlugin.loader
+            : {
+                loader: 'style-loader',
+                options: {
+                  attributes: {
+                    nonce: CSP_NONCE,
+                  },
+                },
+              },
           {
             loader: 'css-loader',
             options: {

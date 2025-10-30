@@ -31,6 +31,7 @@ const REQUIRED_HEADERS = {
         'worker-src',
         'manifest-src',
         'upgrade-insecure-requests',
+        'trusted-types',
         'block-all-mixed-content'
       ];
       return requiredDirectives.every(directive => 

@@ -14,9 +14,9 @@ The website implements enterprise-grade security headers to protect against vari
 **Configuration**:
 ```
 default-src 'self';
-script-src 'self';
+script-src 'self' 'nonce-portfolio2025';
 script-src-attr 'none';
-style-src 'self' 'unsafe-inline';
+style-src 'self' 'nonce-portfolio2025';
 style-src-attr 'none';
 font-src 'self';
 img-src 'self' data: https:;
@@ -32,22 +32,24 @@ base-uri 'self';
 manifest-src 'self';
 upgrade-insecure-requests;
 block-all-mixed-content;
+trusted-types default;
 require-trusted-types-for 'script'
 ```
 
 **Key Features**:
-- Blocks all external scripts except from same origin and bans inline event handlers
+- Restricts script execution to same-origin bundles and the Webpack-issued nonce while banning inline event handlers
 - Hosts typography assets locally, eliminating third-party style dependencies
-- Locks down dynamically injected styles to the bundled runtime only
+- Enforces nonce-gated style injection so only build-authored styles (including dev hot reload) can execute
 - Prevents framing (clickjacking protection)
 - Forces HTTPS upgrades and Mixed Content blocking
-- Requires Trusted Types for script sinks, mitigating DOM XSS injection
+- Requires Trusted Types with a `default` policy for DOM sinks, mitigating injection attacks
 
 #### 2. X-Frame-Options
 **Purpose**: Prevents clickjacking attacks by controlling iframe embedding.
 
 **Configuration**: `DENY`
 - Completely prevents the page from being embedded in frames
+- Runtime watchdog detects hostile framing, attempts to break out, and displays a user-facing warning when upstream proxies strip headers
 
 #### 3. X-Content-Type-Options
 **Purpose**: Prevents MIME sniffing attacks.
